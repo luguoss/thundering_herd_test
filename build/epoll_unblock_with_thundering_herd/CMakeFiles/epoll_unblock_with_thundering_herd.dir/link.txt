@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++11 -pthread -Wl,--no-as-needed    CMakeFiles/epoll_unblock_with_thundering_herd.dir/main.cpp.o  -o epoll_unblock_with_thundering_herd -rdynamic 
