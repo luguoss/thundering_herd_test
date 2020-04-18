@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11 -pthread -Wl,--no-as-needed    CMakeFiles/accept_block.dir/accept_block.cpp.o  -o accept_block -rdynamic 
