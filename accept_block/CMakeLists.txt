@@ -19,4 +19,4 @@ link_libraries(
 )
 
 
-add_executable(accept_block ${CMAKE_CURRENT_LIST_DIR}/accept_block.cpp)    
+add_executable(accept_block ${CMAKE_CURRENT_LIST_DIR}/main.cpp)    

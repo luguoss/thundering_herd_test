@@ -4,10 +4,15 @@
 1. git clone 本工程
 2. mkdir build && cd build
 3. cmake .. && make -j 8
-4. 启动一个模块的可执行文件 ./accept_block_wait_root_socket_listen_fd/accept_block
+4. 启动一个模块的可执行文件 ./accept_block/accept_block
 5. 测试连接： telnet 127.0.0.1 8888
 ---
-## accept_block_wait_root_socket_listen_fd
-此模块用于测试父进程开启socket进行监听，并fork若干子进程进行accpet阻塞等待 如果惊群效应存在， 则在连接后 服务端会打印n次收到信号 但仅一个fork进程accpet成功；
+## 1.accept_block
+  此模块用于测试父进程开启socket进行监听，并fork若干子进程进行accpet阻塞等待 如果惊群效应存在， 则在连接后 服务端会打印n次收到信号 但仅一个fork进程accpet成功；
 测试结果发现并不是这样，只有一个进行响应，而其他的三个进程并没有接收到请求， 这是因为linux 2.6内核已经解决了accept惊群的问题：
 **大概的处理方式就是，当内核接收到一个客户连接后，只会唤醒等待队列上的第一个进程或线程。所以，如果服务器采用accept阻塞调用方式，在最新的Linux系统上，已经没有“惊群”的问题了。**
+
+## 2.epoll_unblock
+    此模块测试epoll模型，从结果看出，与上面是一样的，只有一个进程接收到连接，其他三个没有收到，说明没有发生惊群现象。
+在早期的Linux版本中，内核对于阻塞在epoll_wait的进程，也是采用全部唤醒的机制，所以存在和accept相似的“惊群”问题。新版本的的解决方案也是只会唤醒等待队列上的第一个进程或线程，所以，新版本Linux 部分的解决了epoll的“惊群”问题。所谓部分的解决，意思就是：
+    **对于部分特殊场景，使用epoll机制，已经不存在“惊群”的问题了，但是对于大多数场景，epoll机制仍然存在“惊群”。**
